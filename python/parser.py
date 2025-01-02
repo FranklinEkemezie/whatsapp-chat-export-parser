@@ -4,6 +4,7 @@ def main():
 
     filename    = get_filename()
     from_date   = datetime(year=2024, month=11, day=1)
+    to_date     = datetime.now()
 
     chats       = parse_chats_from_file(filename, from_date, to_date)
 

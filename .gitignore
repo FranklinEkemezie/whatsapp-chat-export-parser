@@ -1,3 +1,5 @@
 samples/
 c/*.exe
 results/
+.vscode/
+python/__pycache__/

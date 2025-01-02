@@ -31,7 +31,6 @@ def parse_chats_from_file(filename: str, from_date: datetime|None, to_date: date
             if not chat:
                 continue
 
-
             if from_date is not None and not chat.sent_after(from_date):
                 continue
 
@@ -61,7 +60,7 @@ def parse_line(line: str) -> Chat:
 
     dd, mm, yyyy = int(dd), int(mm), int(yyyy)
     hr, min = int(hr), int(min)
-    hr = (hr + 12) if am_pm == "pm" and hr > 12 else hr
+    hr = (hr + 12) if am_pm == "pm" and hr != 12 else hr
 
     chat_timestamp = datetime(year=yyyy, month=mm, day=dd, hour=hr, minute=min)
 
@@ -108,7 +107,7 @@ def get_chats_per_sender(chats: list, sort_asc: None|bool = None) -> dict:
     }
 
 
-def save_parse_results(filename: str, chats: list) -> bool:
+def save_parse_results(filename: str, chats: list, dump_on_console: bool = True) -> bool:
     """Save the parsed results to files"""
 
     root_dir    = os.path.dirname(os.getcwd())
@@ -151,6 +150,9 @@ def save_parse_results(filename: str, chats: list) -> bool:
     with open(summary_filename, "w", encoding="utf-8") as summary_file:
         summary = get_summary_from_template(filename, chats)
         summary_file.write(summary)
+
+    if dump_on_console:
+        print(summary)
 
     return True
 

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+/**
+ * Represent a Chat
+ */
 class Chat implements JsonSerializable
 {
 
@@ -43,8 +46,8 @@ class Chat implements JsonSerializable
     public function toArray(): array
     {
         return [
-            'sender'    => $this->sender,
-            'message'   => $this->message,
+            'sender'    => mb_convert_encoding($this->sender, "utf-8"),
+            'message'   => mb_convert_encoding($this->message, "utf-8"),
             'timestamp' => $this->timestamp->format("d-m-Y h:i a")
         ];
     }

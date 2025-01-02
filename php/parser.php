@@ -12,18 +12,37 @@ declare(strict_types=1);
 require_once __DIR__ . "/Chat.php";
 require_once __DIR__ . "/helpers.php";
 
+$filename = $from = $to = $jsonFilename = $summaryFilename = "";
 
-$filename = getFilename();
+if (PHP_SAPI !== 'cli') {
+    die("parser must be run from the command line.\n");
+}
+
+$_ = DIRECTORY_SEPARATOR;
+$defaultDir = "..{$_}results{$_}php";
+
+getCLIArguments(
+    $filename,
+    $from,
+    $to,
+    $jsonFilename,
+    $summaryFilename,
+    [
+        'json_filename'     => "$defaultDir{$_}chats.json",
+        'summary_filename'  => "$defaultDir{$_}summary.txt"
+    ]
+);
+
 if (! file_exists($filename)) {
     dumpMsg("File not found");
     exit;
 }
 
-// $from = getFromDate();
-$from = null;
-$chats = parseChatsFromFile($filename, $from);
+if ($from !== null) $from = new DateTime($from);
+if ($to !== null)   $to   = new DateTime($to);
+$chats = parseChatsFromFile($filename, $from, $to);
 
-if (! saveParseResults($filename, $chats)) {
+if (! saveParseResults($filename, $jsonFilename, $summaryFilename, $chats)) {
     dumpMsg("Could not save results");
     exit(1);
 } else {
